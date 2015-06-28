@@ -26,16 +26,17 @@ function files:close (...)
   end
 end
 
+local reader = function (f, b)
+  if f then
+    return f:read (b or defaults.bytes)
+  end
+end
+
 local randbytes = {
-  r = function (f, b)
-    if f then
-      return f:read (b or defaults.bytes)
-    end
-  end,
   generate = function (f, ...)
     if f then
       local n, m = 0, select (2, ...) or defaults.mask
-      local s = f:read (select (1, ...) or defaults.bytes)
+      local s = reader (f, select (1, ...))
 
       for i = 1, s:len () do
         n = m * n + s:byte (i)
@@ -53,17 +54,17 @@ function randbytes:open ()
 end
 
 function randbytes:close ()
-  files:close('random', 'urandom')
+  files:close ('random', 'urandom')
 
   return self
 end
 
-function randbytes:uread (b)
-  return self.r (files.urandom, b)
+function randbytes:uread (...)
+  return reader (files.urandom, ...)
 end
 
-function randbytes:read (b)
-  return self.r (files.random, b)
+function randbytes:read (...)
+  return reader (files.random, ...)
 end
 
 function randbytes:urandom (...)
@@ -81,9 +82,9 @@ end
 
 randbytes:open ()
 
-return setmetatable(randbytes, {
+return setmetatable (randbytes, {
   __call = function (t, ...)
-    return t.r (files[defaults.file], ...)
+    return reader (files[defaults.file], ...)
   end,
   __metatable = false,
   __newindex = function () return false end
