@@ -5,31 +5,35 @@ Tiny module for reading random bytes, and simple number generation, on Unix-like
 ## Dependencies
 
 - Unix-like platform (Linux, OS X)
-- [Lua](http://www.lua.org/) & [LuaRocks](https://luarocks.org/)
+- [Lua](http://www.lua.org/)
+- Easy install with: [LuaRocks](https://luarocks.org/)
 
 ## Usage
 
-Install the module.
+Install the [module][module-docs].
 
-```
-luarocks install randbytes
+```shell
+$ luarocks install randbytes
 ```
 
-Require the module.
+Require the [module][module-docs].
 
 ```lua
 randbytes = require 'randbytes'
 ```
 
-Use the module.
+Use the [module][module-docs].
 
 ```lua
 randbytes ()
 ```
 
-Then read the [documentation](https://github.com/Oka-/randbytes/blob/master/docs/man.md).
+Explore the [module][module-docs].
 
-Neat!
+
+## Documentation
+
+If you haven't noticed, documentation can be found [here][module-docs].
 
 
 ## License
@@ -41,3 +45,5 @@ MIT just like Lua.
 Enjoy!
 
 [@Okahypen](https://twitter.com/Okahyphen)
+
+[module-docs]: https://github.com/Oka-/randbytes/blob/master/docs/man.md
