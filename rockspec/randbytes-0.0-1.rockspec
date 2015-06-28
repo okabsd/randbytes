@@ -11,7 +11,7 @@ description = {
    license = "MIT"
 }
 source = {
-  url = "https://github.com/Oka-/randbytes",
+  url = "git://github.com/Oka-/randbytes",
   tag = 'v0.0.1'
 }
 build = {
