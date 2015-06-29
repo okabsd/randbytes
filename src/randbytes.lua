@@ -5,7 +5,8 @@
 local defaults = setmetatable ({
   bytes = 4,
   mask = 256,
-  file = 'urandom'
+  file = 'urandom',
+  filetable = {'urandom', 'random'}
 }, { __newindex = function () return false end })
 
 local files = {
@@ -13,20 +14,35 @@ local files = {
   random = false
 }
 
-function files:open ()
-  self.urandom = assert (io.open ('/dev/urandom', 'rb'))
-  self.random = assert (io.open ('/dev/random', 'rb'))
+local utils = {}
+
+function utils:gettable (...)
+  local t, r = {...}, defaults.filetable
+  if #t > 0 then r = t end
+  return r
 end
 
-function files:close (...)
-  for _, f in next, {...} do
-    if self[f] then
-      self[f] = not assert (self[f]:close ())
+function utils:open (...)
+  for _, f in next, self:gettable (...) do
+    for k, _ in next, files do
+      if k == f then
+        files[f] = assert (io.open ('/dev/'..f, 'rb'))
+      end
     end
   end
 end
 
-local reader = function (f, b)
+function utils:close (...)
+  for _, f in next, self:gettable (...) do
+    for k, _ in next, files do
+      if files[f] and k == f then
+        files[f] = not assert (files[f]:close ())
+      end
+    end
+  end
+end
+
+function utils:reader (f, b)
   if f then
     return f:read (b or defaults.bytes)
   end
@@ -36,7 +52,7 @@ local randbytes = {
   generate = function (f, ...)
     if f then
       local n, m = 0, select (2, ...) or defaults.mask
-      local s = reader (f, select (1, ...))
+      local s = utils:reader (f, select (1, ...))
 
       for i = 1, s:len () do
         n = m * n + s:byte (i)
@@ -47,24 +63,22 @@ local randbytes = {
   end
 }
 
-function randbytes:open ()
-  files:open ()
-
+function randbytes:open (...)
+  utils:open (...)
   return self
 end
 
-function randbytes:close ()
-  files:close ('random', 'urandom')
-
+function randbytes:close (...)
+  utils:close (...)
   return self
 end
 
 function randbytes:uread (...)
-  return reader (files.urandom, ...)
+  return utils:reader (files.urandom, ...)
 end
 
 function randbytes:read (...)
-  return reader (files.random, ...)
+  return utils:reader (files.random, ...)
 end
 
 function randbytes:urandom (...)
@@ -80,11 +94,11 @@ function randbytes:setdefault (k, v)
   return defaults[k]
 end
 
-randbytes:open ()
+utils:open ()
 
 return setmetatable (randbytes, {
   __call = function (t, ...)
-    return reader (files[defaults.file], ...)
+    return utils:reader (files[defaults.file], ...)
   end,
   __metatable = false,
   __newindex = function () return false end
