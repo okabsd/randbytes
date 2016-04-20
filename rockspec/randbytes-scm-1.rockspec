@@ -12,7 +12,7 @@ description = {
    license = "MIT"
 }
 source = {
-  url = "https://github.com/Okahyphen/randbytes"
+  url = "git://github.com/Okahyphen/randbytes"
 }
 build = {
   type = "builtin",
