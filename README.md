@@ -5,7 +5,7 @@ Tiny module for reading random bytes, and simple number generation, on Unix-like
 ## Dependencies
 
 - Unix-like platform (Linux, OS X)
-- [Lua](http://www.lua.org/)
+- [Lua](http://www.lua.org/), 5.1 or greater
 - Easy install with: [LuaRocks](https://luarocks.org/)
 
 ## Usage
@@ -38,12 +38,13 @@ If you haven't noticed, documentation can be found [here][module-docs].
 
 ## License
 
-MIT just like Lua.
+[MIT][license] just like Lua.
 
 ---
 
 Enjoy!
 
-[@Okahypen](https://twitter.com/Okahyphen)
+[oka.io](http://oka.io)
 
-[module-docs]: https://github.com/Oka-/randbytes/blob/master/docs/man.md
+[module-docs]: https://github.com/Okahyphen/randbytes/blob/master/docs/man.md
+[license]: https://raw.githubusercontent.com/Okahyphen/randbytes/master/LICENSE
