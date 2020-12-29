@@ -1,0 +1,71 @@
+= `randbytes`
+
+Tiny module for reading random bytes, and simple number generation, on Unix-like platforms.
+
+== Dependencies
+
+* Unix-like platform (BSD, Linux, macOS)
+* https://www.lua.org/[Lua] >= 5.1
+
+== Install
+
+With https://luarocks.org/modules/oka/randbytes[`luarocks`].
+
+[source, shell]
+----
+$ luarocks install randbytes
+----
+
+Or grab the https://github.com/okabsd/randbytes[source].
+
+== Documentation
+
+=== Usage
+
+Requiring the module will return the interface, so assign it to a variable.
+
+[source, lua]
+----
+local randbytes = require 'randbytes'
+----
+
+=== Defaults
+
+All methods can be called without arguments, in which case they use the `defaults`:
+
+* `bytes` defaults to `4`
+* `mask` defaults to `256`
+* `file` defaults `'urandom'`
+* `filetable` defaults to `{ 'random', 'urandom' }`
+
+Defaults can be modified with `:setdefault`.
+
+=== Metacall
+
+The interface can be invoked directly.
+
+`randbytes (n) -> string|nil`:: Reads _n_ bytes from the default: `file`
+
+=== Methods
+
+`:read (bytes) -> string|nil`:: Reads N _bytes_ from `/dev/random`
+`:uread (bytes) -> string|nil`:: Reads N _bytes_ from `/dev/urandom`
+`:random (bytes, mask) -> number|nil`:: Reads N _bytes_ from `/dev/random`, and returns a number augmented by _mask_, using simple number generation
+`:urandom (bytes, mask) -> number|nil`:: Same as `:random`, reading from `/dev/urandom` instead
+`:open (...files) -> self`:: Opens files (this is called internally when the module initializes)
+`:close (...files) -> self`:: Closes files
+
+> Both `:open` & `:close` take a variable number of string parameters, indicating which files to use. Passing no arguments will populate these strings from the default: `filetable`.
+
+`:setdefault (key, value) -> defaults[key]`:: Sets default values, _(key, value)_ pairs are as follows:
+* `'bytes'`, _number_
+* `'mask'`, _number_
+* `'file'`, `'random'` or `'urandom'`
+* `'filetable'`, _table<string>_ containing any of: `'random'`, `'urandom'`
+
+=== Notes
+
+When files are closed, calls to `:read` and `:random` style methods will return `nil`.
+
+== License
+https://raw.githubusercontent.com/okabsd/randbytes/master/LICENSE[MIT], just like Lua.
